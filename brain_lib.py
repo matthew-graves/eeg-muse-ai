@@ -27,7 +27,6 @@ def plot_value_array(i, predictions_array, true_label):
 def get_dataset(filename):
     # Load Dataset From File
     hf = h5py.File(filename, 'r')
-    data = []
     all_data = np.zeros([100, 5, 3])
     for i in hf:
         data = hf[i][:]

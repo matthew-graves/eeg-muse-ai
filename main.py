@@ -11,13 +11,13 @@ import random
 import numpy as np
 import h5py
 from enum import Enum
-import brain_model
+import brain_lib
 hf = h5py.File('data.h5', 'w')
 
 wave_counters = [0, 0, 0, 0, 0]
 color = 0
 dataset_counter = 0
-p = subprocess.Popen(['feh', '/home/mgraves/Pictures/start.jpeg'])
+p = subprocess.Popen(['feh', 'images/start.jpeg'])
 a = np.zeros([100, 5, 3])
 
 
@@ -28,9 +28,9 @@ class Color(Enum):
 
 
 def guess_color():
-    model = brain_model.load_existing_model('model.h5')
+    model = brain_lib.load_existing_model('model.h5')
     data = a[:, :, 1:]
-    return brain_model.make_prediction(model, data, max(wave_counters))
+    return brain_lib.make_prediction(model, data, max(wave_counters))
 
 
 def change_color():
@@ -40,7 +40,7 @@ def change_color():
         p.kill()
     color = random.choice([0, 1, 2])
     print('Color Set To: ' + Color(color).name)
-    p = subprocess.Popen(["feh", "/home/mgraves/Pictures/"+Color(color).name+".jpeg"])
+    p = subprocess.Popen(["feh", 'images/' + Color(color).name+".jpeg"])
 
 
 def append_data_to_file(datasetarray):
