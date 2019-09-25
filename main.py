@@ -59,13 +59,13 @@ def print_decibels(unused_addr, args, bels):
     global color
     global a
     global wave_counters
-    if wave_counters < [10, 10, 10, 10, 10]:
+    if wave_counters < [100, 100, 100, 100, 100]:
         try:
             a[wave_counters[args[0]], args[0]] = [color,  args[0], (bels*100)]
             wave_counters[args[0]] += 1
-            if np.unique(wave_counters).size == 1 and wave_counters != [0, 0, 0, 0, 0]:
-                color_guess = guess_color()
-                print(Color(color_guess).name)
+            #if np.unique(wave_counters).size == 1 and wave_counters != [0, 0, 0, 0, 0]:
+            #    color_guess = guess_color()
+            #    print(Color(color_guess).name)
         except ValueError: pass
     else:
         wave_counters = [0, 0, 0, 0, 0]
