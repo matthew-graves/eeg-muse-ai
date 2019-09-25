@@ -48,7 +48,7 @@ def create_model():
     model = keras.Sequential([
         keras.layers.Flatten(input_shape=(5, 2)),
         keras.layers.Dense(25, activation=tf.nn.relu),
-        keras.layers.Dense(10, activation=tf.nn.softmax)
+        keras.layers.Dense(25, activation=tf.nn.sigmoid)
     ])
 
     model.compile(optimizer='adam',
@@ -58,10 +58,11 @@ def create_model():
 
 
 def train_model(model, data_only, labels, epochs):
-    filepath = "weights.best.hdf5"
+    filepath = "weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
     callbacks_list = [checkpoint]
-    model.fit(data_only, labels, epochs=epochs, callbacks=callbacks_list, batch_size=64, validation_split=0.20, verbose=0)
+    model.fit(data_only, labels, epochs=epochs, callbacks=callbacks_list, batch_size=100, validation_split=0.20,
+              verbose=1)
     model.save('model.h5')
     return model
 
