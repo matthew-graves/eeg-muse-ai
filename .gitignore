@@ -3,3 +3,5 @@ __pycache__
 .idea
 *.h5
 *h5.bak
+weights/
+logs/

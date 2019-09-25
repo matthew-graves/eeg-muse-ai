@@ -8,6 +8,14 @@ import random
 import matplotlib.pyplot as plt
 from keras.callbacks import ModelCheckpoint
 numpy.set_printoptions(threshold=sys.maxsize, suppress=True)
+config = tf.ConfigProto()
+config.gpu_options.allow_growth=True
+sess = tf.Session(config=config)
+from keras import backend as K
+K.set_session(sess)
+import datetime
+
+
 
 
 def plot_value_array(i, predictions_array, true_label):
@@ -48,7 +56,9 @@ def create_model():
     model = keras.Sequential([
         keras.layers.Flatten(input_shape=(5, 2)),
         keras.layers.Dense(25, activation=tf.nn.relu),
-        keras.layers.Dense(25, activation=tf.nn.sigmoid)
+        keras.layers.Dense(50, activation=tf.nn.softmax),
+	keras.layers.Dense(50),
+        keras.layers.Dense(50, activation=tf.nn.sigmoid)
     ])
 
     model.compile(optimizer='adam',
@@ -58,10 +68,12 @@ def create_model():
 
 
 def train_model(model, data_only, labels, epochs):
-    filepath = "weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+    filepath = "weights/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+    logdir = "logs/scalars/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    tensorboard_callback = keras.callbacks.TensorBoard(log_dir=logdir)
     checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-    callbacks_list = [checkpoint]
-    model.fit(data_only, labels, epochs=epochs, callbacks=callbacks_list, batch_size=100, validation_split=0.20,
+    callbacks_list = [checkpoint, tensorboard_callback]
+    model.fit(data_only, labels, epochs=epochs, callbacks=callbacks_list, batch_size=104, validation_split=0.20,
               verbose=1)
     model.save('model.h5')
     return model
